@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}
+
+.container{
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #008a2e, #09869c);
+    padding: 10px;
+}
+
+.einkauf-app{
+    width: 100%;
+    max-width: 540px;
+    background: linear-gradient(135deg, #ffffff, #effff8);
+    margin: 100px auto 20px;
+    padding: 40px 30px 70px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.einkauf-app h2{
+    color: #002765;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.einkauf-app h2 img{
+    width: 50px;
+    margin-left: 10px;
+    
+}
