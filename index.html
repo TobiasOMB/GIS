@@ -9,12 +9,19 @@
 <body>
 <div class="container">
     <div class="einkauf-app">
-        <h2>Einkaufsliste <img src="Bilder/icon2.png"></h2>
-        <div class="row">
-            <input type="text" id="input-box" placeholder="Produkt">
-            <button>Hinzufügen</button>
+        <h2><img src="Bilder/icon2.png">Einkaufsliste</h2>
+        <div class="add">
+            <input type="text" id="input-box" placeholder="Produkt hinzufügen">
+            <button onclick="addTask()">Hinzufügen</button>
         </div>
+        <ul id="list-container">
+            <!--<li class="checked">Task 1</li>
+            <li>Task 2</li>
+            <li>Task 3</li> -->
+        </ul>
     </div>
 </div>
+<script src="script.js"></script>
+<script src="sweetalert.min.js"></script>
 </body>
 </html>
