@@ -5,6 +5,6 @@ GIS Projekt - OMB 2 - SS24
 
 18.03.2023 - 22:30 bis 00:35 Uhr: Erste Grundstruktur zur Erstellung eines Containers für die Einkaufsliste wurde in HTML und CSS umgesetzt.
 
-19.03.2023 - 18 Uhr: Erstellung des Javascripts und Beendigung des HTML und CSS Codes.
+19.03.2023 - 18 Uhr: Erstellung des Javascripts und Beendigung des HTML und CSS Codes. Error Meldung bei keiner Eintragung wurde durch Sweetalerts "verschönert".
 
 02.04.2024 - 18:30 Uhr: Abgabe des Projekts über Felix
