@@ -3,14 +3,13 @@
     padding: 0;
     font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
-}
+    }
 
 .container{
     width: 100%;
     min-height: 100vh;
-    background-image: url(abstra);
-    background: linear-gradient(135deg, #008a2e, #09869c);
     padding: 10px;
+    background-image: url(abstractBG.jpg);
 }
 
 .einkauf-app{
