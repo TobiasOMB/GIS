@@ -8,6 +8,7 @@
 .container{
     width: 100%;
     min-height: 100vh;
+    background-image: url(abstra);
     background: linear-gradient(135deg, #008a2e, #09869c);
     padding: 10px;
 }
