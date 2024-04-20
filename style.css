@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
 *{
     margin: 0;
     padding: 0;
@@ -6,17 +8,17 @@
     }
 
 .container{
+    align-items: center;
     width: 100%;
     min-height: 100vh;
     padding: 10px;
-    background-image: url('/Bilder/abstractBG.png');
-    background-repeat: no-repeat;
+    background: url('/Bilder/abstractBG.png') no-repeat;
+    background-size: cover;
     background-position: center;
-    background-attachment: fixed;
 }
 
 .einkauf-app{
-    width: 100%;
+    width: 420%;
     max-width: 600px;
     background: transparent;
     margin: 100px auto 20px;
@@ -34,7 +36,7 @@
     font-size: 30px;
     display: flex;
     align-items: center;
-    padding: 00px 50px 0px;
+    padding: 00px 70px 0px;
     margin-bottom: 16px;
 }
 
