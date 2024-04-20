@@ -5,11 +5,14 @@
     box-sizing: border-box;
     }
 
+body{
+    background-image: url(abstractBG.png);
+}
+
 .container{
     width: 100%;
     min-height: 100vh;
     padding: 10px;
-    background-image: url(abstractBG.jpg);
 }
 
 .einkauf-app{
