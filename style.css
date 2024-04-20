@@ -5,46 +5,48 @@
     box-sizing: border-box;
     }
 
-body{
-    background-image: url(abstractBG.png);
-}
-
 .container{
     width: 100%;
     min-height: 100vh;
     padding: 10px;
+    background-image: url('/Bilder/abstractBG.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .einkauf-app{
     width: 100%;
-    max-width: 540px;
-    background: linear-gradient(135deg, #ffffff, #effff8);
+    max-width: 600px;
+    background: transparent;
     margin: 100px auto 20px;
-    padding: 40px 30px 70px;
+    padding: 50px 125px 100px;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        
 }
 
 .einkauf-app h2{
-    color: #002765;
+    color: #ffffff;
+    font-weight: 1000;
+    font-size: 30px;
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
-}
-
-.einkauf-app h2 img{
-    width: 50px;
-    margin-right: 10px;
+    padding: 10px 30px 0px;
+    margin-bottom: 16px;
 }
 
 .add{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #bdeaff;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 30px;
     padding-left: 20px;
     margin-bottom: 25px;
+    max-width: 300px;
 }
 
 input{
@@ -52,16 +54,17 @@ input{
     border: none;
     outline: none;
     background: transparent;
-    padding: 10px;
-    
+    padding: 15px;  
+    color:#ffffff;
+    font-size: 16px;
 }
 
 button{
     position: relative;
-    padding: 10px 22px;
-    background: #01b16e;
+    padding: 15px 22px;
+    background: linear-gradient(135deg, #ffa600, #ff7b00);
     border-radius: 40px;
-    color: #fff;
+    color: #ffffff;
     border: none;
     font-size: 16px;
     font-weight: 400;
@@ -94,6 +97,7 @@ ul li{
     user-select: none;
     cursor: pointer;
     position: relative;
+    color: #ffffff;
 }
 
 ul li::before{
@@ -110,13 +114,14 @@ ul li::before{
 }
 
 ul li.checked{
-    color: #3c583e;
+    color: #ffffff;
     text-decoration: line-through;
     font-weight: 600;
 
 }
 
 ul li.checked::before{
+    color: #ffffff;
     background-image: url(Bilder/checkup100_2.png);
 }
 
@@ -127,12 +132,13 @@ ul li span{
     width: 40px;
     height: 40px;
     font-size: 22px;
-    color: #555;
+    color: #ffffff;
     line-height: 40px;
     text-align: center;
     border-radius: 50%;
 }
 
 ul li span:hover{
-    background: #edeef0;
+    background: rgba(43, 255, 72, 0.8);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
