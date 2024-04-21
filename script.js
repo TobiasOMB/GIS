@@ -1,7 +1,7 @@
 const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("list-container");
 
-function addTask(){
+function addTask1(){
     if(inputBox.value === ''){
         swal('Achtung', 'Bitte ein Produkt angeben!');
         // Es ginge im klassischen Sinne auch wie unten aufgeführt, doch durch Sweetalert, lässt sich eine Alertmeldung schöner darstellen
