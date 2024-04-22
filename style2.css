@@ -66,24 +66,29 @@ body{
     font-size: 20px;
 }
 
-.wrapper .remember-forgot{
-    display: flex;
-    justify-content: space-between;
+.wrapper .register{
     font-size: 14.5px;
-    margin: -15px 0 15px;
+    text-align: center;
 }
 
-.remember-forgot lable input{
+.register lable input{
     accent-color: #fff;
     margin-right: 3px;
 }
 
-.remember-forgot a{
+.wrapper .register{
+    text-align: center;
+    font-size: 14.5px;
+    margin: 20px 10 15px;
+    margin-bottom: 40px;
+}
+
+.register a{
     color: #fff;
     text-decoration: none;
 }
 
-.remember-forgot a:hover{
+.register a:hover{
     text-decoration: underline;
 }
 
@@ -107,18 +112,8 @@ body{
 }
 
 
-.wrapper .register-link{
-    font-size: 14.5px;
+.wrapper .creator{
+    font-size: 10px;
     text-align: center;
-    margin: 20px 0 15px;
-}
-
-.register-link p a{
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.register-link p a:hover{
-    text-decoration: underline;
+    margin: 50px 0 0px;
 }

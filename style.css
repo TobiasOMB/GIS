@@ -32,12 +32,14 @@
 
 .einkauf-app h2{
     color: #ffffff;
-    font-weight: 1000;
-    font-size: 30px;
+    font-weight: 800;
+    font-size: 40px;
     display: flex;
     align-items: center;
-    padding: 00px 70px 0px;
-    margin-bottom: 16px;
+    padding: 0px 36.7px 0px;
+    margin-bottom: -70px;
+    
+    
 }
 
 .add{
@@ -149,8 +151,8 @@ ul li span:hover{
 
 .container .einkauf-app .listenname{
     display: flex;
+    
 }
-
 
 .listenname .logout{
     color: #ffffff;
@@ -165,7 +167,11 @@ ul li span:hover{
     background: linear-gradient(135deg, #ff0000, #ff3300);
 }
 
-
-
-
-
+.creator{
+    font-size: 10px;
+    color: #ffffff;
+    text-align: center;
+    align-items: center;
+    padding-bottom: 50px;
+    padding-left: 10px;
+}
