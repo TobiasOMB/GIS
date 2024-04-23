@@ -26,8 +26,7 @@
     border-radius: 10px;
     border: 2px solid rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(20px);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);     
 }
 
 .einkauf-app h2{
@@ -37,9 +36,7 @@
     display: flex;
     align-items: center;
     padding: 0px 36.7px 0px;
-    margin-bottom: -70px;
-    
-    
+    margin-bottom: -70px;    
 }
 
 .add{
@@ -50,7 +47,7 @@
     border-radius: 30px;
     padding-left: 20px;
     margin-bottom: 25px;
-    max-width: 300px;
+    max-width: 300px;   
 }
 
 input{
@@ -94,10 +91,16 @@ button::after{
     background-repeat: no-repeat;
 }
 
+
+ul{
+    max-height: 300px;
+    overflow-y: auto;
+}
+
 ul li{
     list-style: none;
     font-size: 22px;
-    padding: 12px 8px 12px 50px;
+    padding: 12px 8px 0px 50px;
     user-select: none;
     cursor: pointer;
     position: relative;
@@ -132,12 +135,12 @@ ul li.checked::before{
 ul li span{
     position: absolute;
     right: 0;
-    top: 5px;
-    width: 40px;
-    height: 40px;
+    top: 12px;
+    width: 30px;
+    height: 30px;
     font-size: 22px;
     color: #ffffff;
-    line-height: 40px;
+    line-height: 33px;
     text-align: center;
     border-radius: 50%;
 }
@@ -151,7 +154,6 @@ ul li span:hover{
 
 .container .einkauf-app .listenname{
     display: flex;
-    
 }
 
 .listenname .logout{
@@ -163,8 +165,8 @@ ul li span:hover{
     padding: 9px 20px 9px;
     margin-bottom: 160px;
     margin-top: -105px;
-    margin-left: 10px;
-    background: linear-gradient(135deg, #ff0000, #ff3300);
+    margin-left: 5px;
+    background: linear-gradient(135deg, #00d9ff, #0084ff);
 }
 
 .creator{
@@ -174,4 +176,8 @@ ul li span:hover{
     align-items: center;
     padding-bottom: 50px;
     padding-left: 10px;
+}
+
+ul{
+    overflow-y: auto;
 }
