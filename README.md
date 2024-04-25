@@ -10,3 +10,5 @@ GIS Projekt - OMB 2 - SS24
 02.04.2024 - 18:30 Uhr: Abgabe des Projekts über Felix
 
 22.04.2024 - 19:00 bis 3 Uhr: Fertigstellung des neuen CSS Codes (neuer Background und Containerdesign, sowie Beifügung eines Logout Buttons.), Erstellung einer statischen HTML und CSS für eine Login Ebene.
+
+25.04.2024 - 9:30 Uhr: Abgabe in Form einer Präsentation in Alfaview zur Webseite und des Codes.
