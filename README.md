@@ -8,3 +8,5 @@ GIS Projekt - OMB 2 - SS24
 19.03.2023 - 18 Uhr: Erstellung des Javascripts und Beendigung des HTML und CSS Codes. Error Meldung bei keiner Eintragung wurde durch Sweetalerts "verschönert". Die Liste ist zentriert und durch ein schlichtes Design mit einem Farbverlauf und Bilder aufbereitet worden. Die Informationen werden aktuell nicht gespeichert. Möchte man dies, so sollte man das entsprechend kommentierte im Javascript Dok. auskommentieren. Die Daten werden im Anschluss lokal gespeichert.
 
 02.04.2024 - 18:30 Uhr: Abgabe des Projekts über Felix
+
+22.04.2024 - 19:00 bis 3 Uhr: Fertigstellung des neuen CSS Codes (neuer Background und Containerdesign, sowie Beifügung eines Logout Buttons.), Erstellung einer statischen HTML und CSS für eine Login Ebene.
