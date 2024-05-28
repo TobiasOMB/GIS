@@ -116,6 +116,10 @@ body{
     transform: scale(0.98);
 }
 
+a:link, a:visited {
+    text-decoration: none;
+    color: #123456
+    }
 
 .wrapper .creator{
     font-size: 10px;

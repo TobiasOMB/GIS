@@ -93,10 +93,19 @@ button::after{
     background-repeat: no-repeat;
 }
 
+a:link, a:visited {
+    text-decoration: none;
+    color: #123456
+    }
 
 ul{
     max-height: 300px;
     overflow-y: auto;
+    padding: 0 10px;
+}
+
+ul::-webkit-scrollbar {
+    width: 10px;
 }
 
 ul li{

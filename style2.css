@@ -95,22 +95,26 @@ body{
 .wrapper .btn{
     width: 100%;
     height: 45px;
-    background: #fff;
+    background: #196fc5;
     border: none;
     outline: none;
     border-radius: 40px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     font-size: 16px;
-    color: #333;
+    color: white;
     font-weight: 600;
-    transition: transform 0.2s easy;    
+    transition: transform 0.2s easy;   
 }
 
 .btn:active{
     transform: scale(0.98);
 }
 
+a:link, a:visited {
+    text-decoration: none;
+    color: #ffffff;
+    }
 
 .wrapper .creator{
     font-size: 10px;
