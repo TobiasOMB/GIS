@@ -16,7 +16,7 @@ function addTask1(){
         span.innerHTML = "\u00d7";
         li.appendChild(span);
         // das Crossitem \u00d7 (zum Löschen des Eintrags) wird nun im dok Span dem eingetragenen Einkauf hinzugefügt
-
+        
     }
     inputBox.value = "";
     saveData();
@@ -25,6 +25,7 @@ function addTask1(){
 listContainer.addEventListener("click", function(e){
     if(e.target.tagName === "LI"){
         e.target.classList.toggle("checked");
+        saveData();
     }
     // Wenn LI geklickt wird, dann wird checked ausgeführt
 
@@ -45,4 +46,4 @@ function showTask(){
 }
 showTask();
 
-// Um die Daten bei einem Reload des HTML Files beizubehalten werden über die Funktion "saveData" die Einträge local gespeichert. Zum Speichern wurde in zeile 22 und 33 die function "saveData" beigefügt.
+// Um die Daten bei einem Reload des HTML Files beizubehalten werden über die Funktion "saveData" die Einträge local gespeichert. Zum Speichern wurde in zeile 22, 28 und 34 die function "saveData" beigefügt.
