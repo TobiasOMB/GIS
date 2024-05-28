@@ -16,7 +16,7 @@ function addTask1(){
         li.appendChild(span);
     }
     inputBox.value = "";
-    // saveData();
+    saveData();
 }
 
 listContainer.addEventListener("click", function(e){
@@ -25,13 +25,13 @@ listContainer.addEventListener("click", function(e){
     }
     else if(e.target.tagName === "SPAN"){
         e.target.parentElement.remove();
-        // saveData();
+        saveData();
     }
 }, false);
 
 // Um die Daten zu speichern, wenn man die Webseite aktualisiert könnte man folgendes dem Skript hinzufügen (plus vorheriges aus Zeile 19 und 28)
 
-/*
+
 function saveData(){
     localStorage.setItem("data", listContainer.innerHTML);
 }
@@ -39,4 +39,3 @@ function showTask(){
     listContainer.innerHTML = localStorage.getItem("data");
 }
 showTask();
-*/
