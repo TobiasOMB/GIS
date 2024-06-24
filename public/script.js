@@ -7,60 +7,73 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Funktion zum Hinzufügen eines Einkaufs
-function addTask() {
+function addTask1() {
     if (inputBox.value === '') {
-        alert('Bitte ein Produkt angeben!');
+        swal('Achtung', 'Bitte ein Produkt angeben!');
         return;
     }
 
-    let li = document.createElement("li");
-    li.textContent = inputBox.value;
-    listContainer.appendChild(li);
-
-    // Speichern der aktualisierten Liste
-    saveData();
-
-    inputBox.value = "";
-}
-
-// Funktion zum Speichern der Daten auf dem Server
-function saveData() {
-    const items = Array.from(listContainer.querySelectorAll('li')).map(li => li.textContent);
-    const jsonData = JSON.stringify(items);
+    // Daten für die POST-Anfrage vorbereiten
+    const newItem = { item: inputBox.value };
 
     fetch('http://localhost:3000/save', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ list: jsonData })
+        body: JSON.stringify(newItem),
     })
     .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Fehler:', error));
+    .then(data => {
+        // Eintrag zur Liste auf der Seite hinzufügen
+        let li = document.createElement("li");
+        li.textContent = inputBox.value;
+        
+        let span = document.createElement("span");
+        span.innerHTML = "\u00d7";
+        span.classList.add("delete-btn"); // Neue Klasse für den Löschen-Button
+        li.appendChild(span);
+        
+        listContainer.appendChild(li);
+        
+        inputBox.value = "";
+    })
+    .catch(error => console.error('Fehler beim Hinzufügen:', error));
 }
+
+// Eventlistener für das Hinzufügen eines Einkaufs durch Drücken der Enter-Taste
+inputBox.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        addTask1();
+    }
+});
+
+// Event Delegation für das Löschen eines Einkaufs
+listContainer.addEventListener("click", function(e) {
+    if (e.target.classList.contains("delete-btn")) {
+        const itemText = e.target.parentElement.firstChild.textContent.trim(); // Nur den Textinhalt des ersten Kindes (ohne das Löschen-Symbol)
+
+        fetch(`http://localhost:3000/delete/${encodeURIComponent(itemText)}`, {
+            method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => {
+            e.target.parentElement.remove();
+        })
+        .catch(error => console.error('Fehler beim Löschen:', error));
+    }
+});
 
 // Funktion zum Laden der gespeicherten Daten vom Server
 function showTask() {
     fetch('http://localhost:3000/load')
         .then(response => response.json())
         .then(data => {
-            const items = JSON.parse(data.list);
-            listContainer.innerHTML = items.map(item => `<li>${item}<span>×</span></li>`).join('');
+            listContainer.innerHTML = data.map(item => `<li>${item.item}<span class="delete-btn">×</span></li>`).join('');
         })
-        .catch(error => console.error('Fehler:', error));
+        .catch(error => console.error('Fehler beim Laden der Daten:', error));
 }
 
-// Event Listener für das Hinzufügen eines Einkaufs
-document.getElementById("add-btn").addEventListener("click", addTask);
-
-// Event Delegation für das Löschen eines Einkaufs
-listContainer.addEventListener("click", function(e) {
-    if (e.target.tagName === "SPAN") {
-        e.target.parentElement.remove();
-        saveData();
-    }
-});
 
 
 
