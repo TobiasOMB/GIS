@@ -51,7 +51,7 @@ inputBox.addEventListener("keydown", function(event) {
 // Event Delegation für das Löschen eines Einkaufs
 listContainer.addEventListener("click", function(e) {
     if (e.target.classList.contains("delete-btn")) {
-        const itemText = e.target.parentElement.firstChild.textContent.trim(); // Nur den Textinhalt des ersten Kindes (ohne das Löschen-Symbol)
+        const itemText = e.target.parentElement.firstChild.textContent.trim(); // Nur den Textinhalt des ersten Childs (ohne das Löschen-Symbol)
 
         fetch(`http://localhost:3000/delete/${encodeURIComponent(itemText)}`, {
             method: 'DELETE',
