@@ -38,12 +38,40 @@ listContainer.addEventListener("click", function(e){
 }, false);
 
 
-function saveData(){
+function saveData() {
+    fetch('http://localhost:3000/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ list: listContainer.innerHTML })
+    }).then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error('Fehler:', error));
+}
+
+function showTask() {
+    fetch('http://localhost:3000/load')
+        .then(response => response.json())
+        .then(data => {
+            listContainer.innerHTML = data;
+        })
+        .catch(error => console.error('Fehler:', error));
+}
+
+showTask();
+
+
+
+
+
+
+/*function saveData(){
     localStorage.setItem("data", listContainer.innerHTML);
 }
 function showTask(){
     listContainer.innerHTML = localStorage.getItem("data");
 }
-showTask();
+showTask();*/
 
 // Um die Daten bei einem Reload des HTML Files beizubehalten werden über die Funktion "saveData" die Einträge local gespeichert. Zum Speichern wurde in zeile 22, 28 und 34 die function "saveData" beigefügt.
