@@ -28,8 +28,8 @@ let shoppingList = loadShoppingList();
 
 // Endpunkt zum Speichern eines neuen Eintrags
 app.post('/save', (req, res) => {
-    const newItem = req.body.item;
-    shoppingList.push({ item: newItem });
+    const newItem = { item: req.body.item, checked: false }; // Standard: unchecked
+    shoppingList.push(newItem);
 
     // Daten in die JSON-Datei schreiben
     fs.writeFile(dataFilePath, JSON.stringify(shoppingList, null, 2), 'utf8', (err) => {
@@ -39,9 +39,10 @@ app.post('/save', (req, res) => {
             return;
         }
         console.log('Daten erfolgreich gespeichert.');
-        res.status(200).json({ message: 'Eintrag hinzugefügt', item: newItem });
+        res.status(200).json({ message: 'Eintrag hinzugefügt', ...newItem });
     });
 });
+
 
 // Endpunkt zum Laden der gesamten Einkaufsliste
 app.get('/load', (req, res) => {
@@ -70,6 +71,29 @@ app.delete('/delete/:itemText', (req, res) => {
         res.status(404).json({ error: 'Eintrag nicht gefunden' });
     }
 });
+
+// PATCH Route zum Aktualisieren des checked-Status eines Eintrags
+app.patch('/update/:itemText', (req, res) => {
+    const itemText = req.params.itemText;
+    const index = shoppingList.findIndex(item => item.item === itemText.trim());
+
+    if (index !== -1) {
+        shoppingList[index].checked = req.body.checked; // Update des checked-Status
+        // Daten in die JSON-Datei schreiben
+        fs.writeFile(dataFilePath, JSON.stringify(shoppingList, null, 2), 'utf8', (err) => {
+            if (err) {
+                console.log('Fehler beim Speichern der Daten:', err.message);
+                res.status(500).json({ error: 'Fehler beim Speichern der Daten' });
+                return;
+            }
+            console.log('Status erfolgreich aktualisiert und Daten gespeichert.');
+            res.status(200).json({ message: 'Status aktualisiert', ...shoppingList[index] });
+        });
+    } else {
+        res.status(404).json({ error: 'Eintrag nicht gefunden' });
+    }
+});
+
 
 // Basis-URL Route für die index.html
 app.get('/', (req, res) => {

@@ -6,15 +6,25 @@ document.addEventListener('DOMContentLoaded', () => {
     showTask();
 });
 
+// Eventlistener für das Hinzufügen eines Einkaufs durch Klicken auf den Button
+document.querySelector('.add button').addEventListener('click', addTask);
+
+// Eventlistener für das Hinzufügen eines Einkaufs durch Drücken der Enter-Taste
+inputBox.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        addTask();
+    }
+});
+
 // Funktion zum Hinzufügen eines Einkaufs
-function addTask1() {
+function addTask() {
     if (inputBox.value === '') {
         swal('Achtung', 'Bitte ein Produkt angeben!');
         return;
     }
 
     // Daten für die POST-Anfrage vorbereiten
-    const newItem = { item: inputBox.value };
+    const newItem = { item: inputBox.value, checked: false }; // Default: unchecked
 
     fetch('http://localhost:3000/save', {
         method: 'POST',
@@ -28,51 +38,110 @@ function addTask1() {
         // Eintrag zur Liste auf der Seite hinzufügen
         let li = document.createElement("li");
         li.textContent = inputBox.value;
-        
+        if (data.checked) {
+            li.classList.add("checked");
+        }
+        li.addEventListener('click', toggleChecked);
+
         let span = document.createElement("span");
         span.innerHTML = "\u00d7";
-        span.classList.add("delete-btn"); // Neue Klasse für den Löschen-Button
+        span.classList.add("delete-btn");
+        span.addEventListener('click', deleteTask);
         li.appendChild(span);
-        
+
         listContainer.appendChild(li);
-        
+
         inputBox.value = "";
     })
     .catch(error => console.error('Fehler beim Hinzufügen:', error));
 }
 
-// Eventlistener für das Hinzufügen eines Einkaufs durch Drücken der Enter-Taste
-inputBox.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        addTask1();
-    }
-});
 
 // Event Delegation für das Löschen eines Einkaufs
-listContainer.addEventListener("click", function(e) {
-    if (e.target.classList.contains("delete-btn")) {
-        const itemText = e.target.parentElement.firstChild.textContent.trim(); // Nur den Textinhalt des ersten Childs (ohne das Löschen-Symbol)
+function deleteTask(e) {
+    const itemText = e.target.parentElement.firstChild.textContent.trim(); // Nur den Textinhalt des ersten Childs (ohne das Löschen-Symbol)
 
-        fetch(`http://localhost:3000/delete/${encodeURIComponent(itemText)}`, {
-            method: 'DELETE',
-        })
-        .then(response => response.json())
-        .then(data => {
-            e.target.parentElement.remove();
-        })
-        .catch(error => console.error('Fehler beim Löschen:', error));
+    fetch(`http://localhost:3000/delete/${encodeURIComponent(itemText)}`, {
+        method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(data => {
+        e.target.parentElement.remove();
+    })
+    .catch(error => console.error('Fehler beim Löschen:', error));
+}
+
+// Event Delegation für das Toggle des checked-Status
+listContainer.addEventListener("click", function(e) {
+    if (e.target.tagName === "LI") {
+        toggleChecked(e.target); // Übergib das LI-Element direkt an die Funktion
     }
 });
+
+// Funktion zum Toggle des checked-Status eines Eintrags
+function toggleChecked(li) {
+    const itemText = li.textContent.trim();
+    const isChecked = li.classList.toggle("checked"); // Toggle der CSS-Klasse für visuelles Feedback
+
+    fetch(`http://localhost:3000/update/${encodeURIComponent(itemText)}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ checked: isChecked }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Status erfolgreich aktualisiert:', data);
+    })
+    .catch(error => {
+        console.error('Fehler beim Aktualisieren des Status:', error);
+        // Rollback des visuellen Toggles bei einem Fehler
+        li.classList.toggle("checked");
+    });
+}
+
+
 
 // Funktion zum Laden der gespeicherten Daten vom Server
 function showTask() {
     fetch('http://localhost:3000/load')
         .then(response => response.json())
         .then(data => {
-            listContainer.innerHTML = data.map(item => `<li>${item.item}<span class="delete-btn">×</span></li>`).join('');
+            shoppingList = data; // Aktualisiere die lokale shoppingList
+
+            listContainer.innerHTML = ''; // Leere die aktuelle Liste
+
+            // Füge jedes Element aus der shoppingList hinzu
+            shoppingList.forEach(item => {
+                let li = document.createElement("li");
+                li.textContent = item.item;
+
+                if (item.checked) {
+                    li.classList.add("checked"); // Falls checked, füge die Klasse checked hinzu
+                }
+
+                let span = document.createElement("span");
+                span.innerHTML = "\u00d7";
+                span.classList.add("delete-btn");
+                span.addEventListener('click', deleteTask);
+                li.appendChild(span);
+
+                listContainer.appendChild(li);
+            });
+
+            // Eventlistener für das Toggle des checked-Status hinzufügen
+            listContainer.querySelectorAll("li").forEach(li => {
+                li.addEventListener('click', toggleChecked);
+            });
         })
         .catch(error => console.error('Fehler beim Laden der Daten:', error));
 }
+
+
+
+
+
 
 
 

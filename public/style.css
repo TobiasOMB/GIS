@@ -134,7 +134,7 @@ ul li::before{
 ul li.checked{
     color: #ffffff;
     text-decoration: line-through;
-    font-weight: 600;
+    font-weight: bold;
 
 }
 
