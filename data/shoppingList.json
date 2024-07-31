@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "item": "Käse",
+    "checked": false
+  },
+  {
+    "item": "Milch",
+    "checked": false
+  },
+  {
+    "item": "Apfeltasche",
+    "checked": false
+  },
+  {
+    "item": "Bier",
+    "checked": false
+  },
+  {
+    "item": "Eier",
+    "checked": false
+  },
+  {
+    "item": "Brot",
+    "checked": false
+  },
+  {
+    "item": "Toast",
+    "checked": false
+  },
+  {
+    "item": "Hefe",
+    "checked": false
+  },
+  {
+    "item": "Mehl",
+    "checked": false
+  },
+  {
+    "item": "Tomatensoße",
+    "checked": false
+  },
+  {
+    "item": "Salami",
+    "checked": false
+  }
+]
