@@ -1,6 +1,17 @@
 [
   {
+    "id": 1722449482393,
+    "username": "Klaus",
+    "password": "$2b$10$jx360KLAXSc7.ct/1QwpMOJkAibxEhwb78CMNrzwJSrS6mD7e2dRW"
+  },
+  {
+    "id": 1722452345038,
+    "username": "Tobias",
+    "password": "$2b$10$JmhsmyUK7fm82bFAec.LAuBBsr0TSMPNbOJlbQL5D5kuGwxFoB1vq"
+  },
+  {
+    "id": 1722452556770,
     "username": "Admin",
-    "password": "$2b$10$OchbXlN8.wUT9LKuat7dFukrnqDBtn1aoBi8BSXNYS4Wf.DSPXOkC"
+    "password": "$2b$10$HmGB40jAd5IBLuF5VTe4HuyZVYJ43ss1t7FZWeqSoc5fuyuCe/st."
   }
 ]

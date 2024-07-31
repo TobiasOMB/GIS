@@ -1,8 +1,14 @@
 [
   {
-    "id": 1722447950987,
+    "id": 1722449354167,
     "item": "Käse",
     "checked": false,
-    "amount": 1
+    "amount": 3
+  },
+  {
+    "id": 1722449693084,
+    "item": "Milch",
+    "checked": false,
+    "amount": 2
   }
 ]

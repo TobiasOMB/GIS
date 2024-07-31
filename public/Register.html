@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,37 +7,76 @@
     <title>Registrierung</title>
     <link rel="stylesheet" href="style3.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
-
 <body>
-
 <div class="wrapper">
-    <form action="">
+    <form id="registerForm" method="POST">
         <h1>REGISTRIERUNG</h1>
-        <p>Bitte hier regestrieren!</p>
-       <div class="input-box"> <!-- Box für den Benutzername -->
-          <input type="username" placeholder="Benutzername" required>
-            <i class='bx bxs-user'></i> <!-- Icon für einen User aus https://boxicons.com/?query=user -->
+        <p>Bitte hier registrieren!</p>
+        <div class="input-box">
+            <input type="text" name="username" placeholder="Benutzername" required>
+            <i class='bx bxs-user'></i>
         </div>
-        <div class="input-box"> <!-- Box für das Passwort -->
-            <input type="password" placeholder="Passwort" required>
-            <i class='bx bxs-lock-alt' ></i> <!-- Icon für das Passwort aus https://boxicons.com/?query=user -->
+        <div class="input-box">
+            <input type="password" name="password" placeholder="Passwort" required>
+            <i class='bx bxs-lock-alt'></i>
         </div>
-        <div class="input-box"> <!-- Box für das Passwort erneut -->
-            <input type="password" placeholder="Passwort Check" required>
-            <i class='bx bxs-lock-alt' ></i> <!-- Icon für das Passwort aus https://boxicons.com/?query=user -->
+        <div class="input-box">
+            <input type="password" name="passwordCheck" placeholder="Passwort erneut" required>
+            <i class='bx bxs-lock-alt'></i>
         </div>
-
-
-        <button type="submit" class="btn"><a href="index.html">REGISTRIEREN</a></button> <!-- Login Button -->
-        
-        <button type="button" class="btn2" onclick="window.location.href='Login.html'">ZURÜCK</button> <!-- Zurück Button -->
-
+        <button type="submit" class="btn">REGISTRIEREN</button>
+        <button type="button" class="btn2" onclick="window.location.href='Login.html'">ZURÜCK</button>
         <div class="creator">
-            <p>created by Tobias Bobek</p> <!-- Creator Signatur -->
+            <p>created by Tobias Bobek</p>
         </div>
     </form>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            const formData = new FormData(this);
+            fetch('/register', {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: formData.get('username'),
+                    password: formData.get('password'),
+                    passwordCheck: formData.get('passwordCheck')
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Fehler',
+                        text: data.error
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Erfolg',
+                        text: data.message
+                    }).then(() => {
+                        window.location.href = 'Login.html'; // Redirect to the login page
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Fehler:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Fehler',
+                    text: 'Ein unbekannter Fehler ist aufgetreten.'
+                });
+            });
+        });
+    </script>
 </div>
-
 </body>
 </html>

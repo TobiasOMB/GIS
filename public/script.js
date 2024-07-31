@@ -88,7 +88,7 @@ function addItemToDOM(item) {
 
     li.appendChild(amount);
     li.appendChild(plus);
-    li.appendChild(minus); // Add minus button
+    li.appendChild(minus);
     li.appendChild(span);
 
     listContainer.appendChild(li);
@@ -96,7 +96,7 @@ function addItemToDOM(item) {
 
 function deleteTask(e) {
     const id = e.target.parentElement.dataset.id;
-    const itemName = e.target.parentElement.firstChild.textContent.trim().toLowerCase();
+    const itemName = e.target.parentElement.textContent.trim().split('\u00d7')[0].trim().toLowerCase();
 
     fetch(`http://localhost:3000/delete/${id}`, {
         method: 'DELETE',
@@ -155,17 +155,8 @@ function increaseAmount(e) {
 
 function decreaseAmount(e) {
     const id = e.target.parentElement.dataset.id;
-    let amountElement = e.target.previousElementSibling; // Dies sollte das Span-Element mit der Menge sein
-    if (!amountElement.classList.contains('amount')) {
-        // Falls das vorherige Geschwisterelement nicht das 'amount' Span ist, das richtige Element suchen
-        const elements = e.target.parentElement.children;
-        for (let i = 0; i < elements.length; i++) {
-            if (elements[i].classList.contains('amount')) {
-                amountElement = elements[i];
-                break;
-            }
-        }
-    }
+    let amountElement = e.target.previousElementSibling; 
+
     const currentAmount = parseInt(amountElement.textContent);
     const newAmount = currentAmount > 1 ? currentAmount - 1 : 1;
 
