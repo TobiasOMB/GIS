@@ -12,7 +12,6 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Funktion zum Laden der Daten aus der JSON-Datei
 function loadShoppingList() {
     try {
         const data = fs.readFileSync(dataFilePath, 'utf8');
@@ -23,82 +22,74 @@ function loadShoppingList() {
     }
 }
 
-// Laden der Daten aus der JSON-Datei, falls vorhanden
 let shoppingList = loadShoppingList();
 
-// Endpunkt zum Speichern eines neuen Eintrags
-app.post('/save', (req, res) => {
-    const newItem = { item: req.body.item, checked: false }; // Standard: unchecked
-    shoppingList.push(newItem);
-
-    // Daten in die JSON-Datei schreiben
-    fs.writeFile(dataFilePath, JSON.stringify(shoppingList, null, 2), 'utf8', (err) => {
+function saveShoppingList() {
+    fs.writeFileSync(dataFilePath, JSON.stringify(shoppingList, null, 2), 'utf8', (err) => {
         if (err) {
             console.log('Fehler beim Speichern der Daten:', err.message);
-            res.status(500).json({ error: 'Fehler beim Speichern der Daten' });
-            return;
+        } else {
+            console.log('Daten erfolgreich gespeichert.');
         }
-        console.log('Daten erfolgreich gespeichert.');
-        res.status(200).json({ message: 'Eintrag hinzugefügt', ...newItem });
     });
+}
+
+app.post('/save', (req, res) => {
+    const newItem = { id: req.body.id, item: req.body.item, checked: req.body.checked, amount: req.body.amount };
+    const existingItem = shoppingList.find(item => item.item === newItem.item);
+
+    if (existingItem) {
+        res.status(400).json({ error: 'Dieses Produkt befindet sich bereits in der Liste!' });
+        return;
+    }
+
+    shoppingList.push(newItem);
+
+    saveShoppingList();
+
+    res.status(200).json(newItem);
 });
 
-
-// Endpunkt zum Laden der gesamten Einkaufsliste
 app.get('/load', (req, res) => {
-    shoppingList = loadShoppingList(); // Daten neu aus der Datei laden
+    shoppingList = loadShoppingList();
     res.status(200).json(shoppingList);
 });
 
-// Endpunkt zum Löschen eines Eintrags
-app.delete('/delete/:itemText', (req, res) => {
-    const itemText = req.params.itemText;
-    const index = shoppingList.findIndex(item => item.item === itemText.trim()); // Suchen nach dem genauen Eintrag
+app.delete('/delete/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const index = shoppingList.findIndex(item => item.id === id);
 
     if (index !== -1) {
-        shoppingList.splice(index, 1); // Eintrag entfernen
-        // Daten in die JSON-Datei schreiben
-        fs.writeFile(dataFilePath, JSON.stringify(shoppingList, null, 2), 'utf8', (err) => {
-            if (err) {
-                console.log('Fehler beim Speichern der Daten:', err.message);
-                res.status(500).json({ error: 'Fehler beim Speichern der Daten' });
-                return;
-            }
-            console.log('Eintrag erfolgreich gelöscht und Daten aktualisiert.');
-            res.status(200).json({ message: 'Eintrag gelöscht', item: itemText });
-        });
+        shoppingList.splice(index, 1);
+
+        saveShoppingList();
+
+        console.log('Eintrag erfolgreich gelöscht und Daten aktualisiert.');
+        res.status(200).json({ message: 'Eintrag gelöscht' });
     } else {
         res.status(404).json({ error: 'Eintrag nicht gefunden' });
     }
 });
 
-// PATCH Route zum Aktualisieren des checked-Status eines Eintrags
-app.patch('/update/:itemText', (req, res) => {
-    const itemText = req.params.itemText;
-    const index = shoppingList.findIndex(item => item.item === itemText.trim());
+app.patch('/update/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    const itemToUpdate = shoppingList.find(item => item.id === id);
 
-    if (index !== -1) {
-        shoppingList[index].checked = req.body.checked; // Update des checked-Status
-        // Daten in die JSON-Datei schreiben
-        fs.writeFile(dataFilePath, JSON.stringify(shoppingList, null, 2), 'utf8', (err) => {
-            if (err) {
-                console.log('Fehler beim Speichern der Daten:', err.message);
-                res.status(500).json({ error: 'Fehler beim Speichern der Daten' });
-                return;
-            }
-            console.log('Status erfolgreich aktualisiert und Daten gespeichert.');
-            res.status(200).json({ message: 'Status aktualisiert', ...shoppingList[index] });
-        });
+    if (itemToUpdate) {
+        if (req.body.checked !== undefined) {
+            itemToUpdate.checked = req.body.checked;
+        }
+        if (req.body.amount !== undefined) {
+            itemToUpdate.amount = req.body.amount;
+        }
+
+        saveShoppingList();
+
+        console.log('Eintrag erfolgreich aktualisiert.');
+        res.status(200).json(itemToUpdate);
     } else {
         res.status(404).json({ error: 'Eintrag nicht gefunden' });
     }
-});
-
-
-// Basis-URL Route für die index.html
-app.get('/', (req, res) => {
-    const indexPath = path.join(__dirname, 'public', 'index.html');
-    res.sendFile(indexPath);
 });
 
 app.listen(PORT, () => {

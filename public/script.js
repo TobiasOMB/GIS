@@ -1,30 +1,37 @@
 const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("list-container");
 
-// Laden der gespeicherten Daten beim Seitenaufruf
+// Global variable to hold the list of existing items (case insensitive)
+let existingItems = new Set();
+
 document.addEventListener('DOMContentLoaded', () => {
     showTask();
 });
 
-// Eventlistener für das Hinzufügen eines Einkaufs durch Klicken auf den Button
 document.querySelector('.add button').addEventListener('click', addTask);
 
-// Eventlistener für das Hinzufügen eines Einkaufs durch Drücken der Enter-Taste
 inputBox.addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         addTask();
     }
 });
 
-// Funktion zum Hinzufügen eines Einkaufs
 function addTask() {
-    if (inputBox.value === '') {
+    const newItemName = inputBox.value.trim().toLowerCase();
+
+    // Check if the item already exists
+    if (existingItems.has(newItemName)) {
+        swal('Achtung', 'Dieses Produkt befindet sich bereits in der Liste!');
+        inputBox.value = ""; // Clear the input field
+        return;
+    }
+
+    if (newItemName === '') {
         swal('Achtung', 'Bitte ein Produkt angeben!');
         return;
     }
 
-    // Daten für die POST-Anfrage vorbereiten
-    const newItem = { item: inputBox.value, checked: false }; // Default: unchecked
+    const newItem = { id: Date.now(), item: inputBox.value.trim(), checked: false, amount: 1 };
 
     fetch('http://localhost:3000/save', {
         method: 'POST',
@@ -33,57 +40,84 @@ function addTask() {
         },
         body: JSON.stringify(newItem),
     })
-    .then(response => response.json())
-    .then(data => {
-        // Eintrag zur Liste auf der Seite hinzufügen
-        let li = document.createElement("li");
-        li.textContent = inputBox.value;
-        if (data.checked) {
-            li.classList.add("checked");
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Produkt existiert bereits');
         }
-        li.addEventListener('click', toggleChecked);
-
-        let span = document.createElement("span");
-        span.innerHTML = "\u00d7";
-        span.classList.add("delete-btn");
-        span.addEventListener('click', deleteTask);
-        li.appendChild(span);
-
-        listContainer.appendChild(li);
-
+        return response.json();
+    })
+    .then(data => {
+        addItemToDOM(data);
+        existingItems.add(newItemName); // Add the new item to the set (case insensitive)
         inputBox.value = "";
     })
-    .catch(error => console.error('Fehler beim Hinzufügen:', error));
+    .catch(error => {
+        console.error('Fehler beim Hinzufügen:', error);
+        swal('Achtung', 'Dieses Produkt befindet sich bereits in der Liste!');
+    });
 }
 
+function addItemToDOM(item) {
+    let li = document.createElement("li");
+    li.dataset.id = item.id;
+    li.textContent = item.item;
 
-// Event Delegation für das Löschen eines Einkaufs
+    if (item.checked) {
+        li.classList.add("checked");
+    }
+    li.addEventListener('click', toggleChecked);
+
+    let amount = document.createElement("span");
+    amount.textContent = item.amount;
+    amount.classList.add("amount");
+
+    let plus = document.createElement("span");
+    plus.textContent = "+";
+    plus.classList.add("plus-btn");
+    plus.addEventListener('click', increaseAmount);
+
+    let minus = document.createElement("span");
+    minus.textContent = "-";
+    minus.classList.add("minus-btn");
+    minus.addEventListener('click', decreaseAmount);
+
+    let span = document.createElement("span");
+    span.innerHTML = "\u00d7";
+    span.classList.add("delete-btn");
+    span.addEventListener('click', deleteTask);
+
+    li.appendChild(amount);
+    li.appendChild(plus);
+    li.appendChild(minus); // Add minus button
+    li.appendChild(span);
+
+    listContainer.appendChild(li);
+}
+
 function deleteTask(e) {
-    const itemText = e.target.parentElement.firstChild.textContent.trim(); // Nur den Textinhalt des ersten Childs (ohne das Löschen-Symbol)
+    const id = e.target.parentElement.dataset.id;
+    const itemName = e.target.parentElement.firstChild.textContent.trim().toLowerCase();
 
-    fetch(`http://localhost:3000/delete/${encodeURIComponent(itemText)}`, {
+    fetch(`http://localhost:3000/delete/${id}`, {
         method: 'DELETE',
     })
     .then(response => response.json())
     .then(data => {
         e.target.parentElement.remove();
+        existingItems.delete(itemName); // Remove the deleted item from the set (case insensitive)
     })
     .catch(error => console.error('Fehler beim Löschen:', error));
 }
 
-// Event Delegation für das Toggle des checked-Status
-listContainer.addEventListener("click", function(e) {
-    if (e.target.tagName === "LI") {
-        toggleChecked(e.target); // Übergib das LI-Element direkt an die Funktion
+function toggleChecked(e) {
+    if (e.target.classList.contains('plus-btn') || e.target.classList.contains('minus-btn') || e.target.classList.contains('delete-btn')) {
+        return;
     }
-});
 
-// Funktion zum Toggle des checked-Status eines Eintrags
-function toggleChecked(li) {
-    const itemText = li.textContent.trim();
-    const isChecked = li.classList.toggle("checked"); // Toggle der CSS-Klasse für visuelles Feedback
+    const id = e.target.dataset.id;
+    const isChecked = e.target.classList.toggle("checked");
 
-    fetch(`http://localhost:3000/update/${encodeURIComponent(itemText)}`, {
+    fetch(`http://localhost:3000/update/${id}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -96,137 +130,69 @@ function toggleChecked(li) {
     })
     .catch(error => {
         console.error('Fehler beim Aktualisieren des Status:', error);
-        // Rollback des visuellen Toggles bei einem Fehler
-        li.classList.toggle("checked");
+        e.target.classList.toggle("checked");
     });
 }
 
+function increaseAmount(e) {
+    const id = e.target.parentElement.dataset.id;
+    const amountElement = e.target.previousElementSibling;
+    const newAmount = parseInt(amountElement.textContent) + 1;
 
+    fetch(`http://localhost:3000/update/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: newAmount }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        amountElement.textContent = newAmount;
+    })
+    .catch(error => console.error('Fehler beim Aktualisieren der Menge:', error));
+}
 
-// Funktion zum Laden der gespeicherten Daten vom Server
+function decreaseAmount(e) {
+    const id = e.target.parentElement.dataset.id;
+    let amountElement = e.target.previousElementSibling; // Dies sollte das Span-Element mit der Menge sein
+    if (!amountElement.classList.contains('amount')) {
+        // Falls das vorherige Geschwisterelement nicht das 'amount' Span ist, das richtige Element suchen
+        const elements = e.target.parentElement.children;
+        for (let i = 0; i < elements.length; i++) {
+            if (elements[i].classList.contains('amount')) {
+                amountElement = elements[i];
+                break;
+            }
+        }
+    }
+    const currentAmount = parseInt(amountElement.textContent);
+    const newAmount = currentAmount > 1 ? currentAmount - 1 : 1;
+
+    fetch(`http://localhost:3000/update/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: newAmount }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        amountElement.textContent = newAmount;
+    })
+    .catch(error => console.error('Fehler beim Aktualisieren der Menge:', error));
+}
+
 function showTask() {
     fetch('http://localhost:3000/load')
         .then(response => response.json())
         .then(data => {
-            shoppingList = data; // Aktualisiere die lokale shoppingList
-
-            listContainer.innerHTML = ''; // Leere die aktuelle Liste
-
-            // Füge jedes Element aus der shoppingList hinzu
-            shoppingList.forEach(item => {
-                let li = document.createElement("li");
-                li.textContent = item.item;
-
-                if (item.checked) {
-                    li.classList.add("checked"); // Falls checked, füge die Klasse checked hinzu
-                }
-
-                let span = document.createElement("span");
-                span.innerHTML = "\u00d7";
-                span.classList.add("delete-btn");
-                span.addEventListener('click', deleteTask);
-                li.appendChild(span);
-
-                listContainer.appendChild(li);
-            });
-
-            // Eventlistener für das Toggle des checked-Status hinzufügen
-            listContainer.querySelectorAll("li").forEach(li => {
-                li.addEventListener('click', toggleChecked);
+            listContainer.innerHTML = '';
+            existingItems.clear(); // Clear the set of existing items
+            data.forEach(item => {
+                existingItems.add(item.item.toLowerCase()); // Add each item to the set (case insensitive)
+                addItemToDOM(item);
             });
         })
         .catch(error => console.error('Fehler beim Laden der Daten:', error));
 }
-
-
-
-
-
-
-
-
-
-
-
-
-/*const inputBox = document.getElementById("input-box");
-const listContainer = document.getElementById("list-container");
-
-function addTask1(){
-    if(inputBox.value === ''){
-        swal('Achtung', 'Bitte ein Produkt angeben!');
-        // Es ginge im klassischen Sinne auch wie unten aufgeführt, doch durch Sweetalert, lässt sich eine Alertmeldung schöner darstellen
-        //alert("Bitte gib ein Produkt an!");
-    }
-    else{
-        let li = document.createElement("li");
-        li.innerHTML = inputBox.value;
-        listContainer.appendChild(li);
-        //Wenn man nun einen Task/Einkauf hinzufügt, so wird dies als liste (listcontainer) ausgegeben
-        let span = document.createElement("span");
-        span.innerHTML = "\u00d7";
-        li.appendChild(span);
-        // das Crossitem \u00d7 (zum Löschen des Eintrags) wird nun im dok Span dem eingetragenen Einkauf hinzugefügt
-        
-    }
-    inputBox.value = "";
-    saveData();
-}
-
-listContainer.addEventListener("click", function(e){
-    if(e.target.tagName === "LI"){
-        e.target.classList.toggle("checked");
-        saveData();
-    }
-    // Wenn LI geklickt wird, dann wird checked ausgeführt
-
-    else if(e.target.tagName === "SPAN"){
-        e.target.parentElement.remove();
-        saveData();
-    }
-    //Wenn das Crossitem geklickt wird, dann wird der Eintrag gelöscht
-
-}, false);
-
-
-function saveData() {
-    const items = Array.from(listContainer.querySelectorAll('li')).map(li => li.textContent);
-    const jsonData = JSON.stringify(items);
-
-    fetch('http://localhost:3000/save', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ list: jsonData })
-    }).then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error('Fehler:', error));
-}
-
-function showTask() {
-    fetch('http://localhost:3000/load')
-        .then(response => response.json())
-        .then(data => {
-            const items = JSON.parse(data.list);
-            listContainer.innerHTML = items.map(item => `<li>${item.slice(0, -1)}<span>×</span></li>`).join('');
-        })
-        .catch(error => console.error('Fehler:', error));
-}
-
-showTask();
-
-*/
-
-
-
-
-/*function saveData(){
-    localStorage.setItem("data", listContainer.innerHTML);
-}
-function showTask(){
-    listContainer.innerHTML = localStorage.getItem("data");
-}
-showTask();*/
-
-// Um die Daten bei einem Reload des HTML Files beizubehalten werden über die Funktion "saveData" die Einträge local gespeichert. Zum Speichern wurde in zeile 22, 28 und 34 die function "saveData" beigefügt.
